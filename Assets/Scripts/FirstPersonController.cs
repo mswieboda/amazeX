@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent (typeof(CharacterController))]
 public class FirstPersonController : MonoBehaviour {
-	
+
 	public float movementSpeed = 5.0f;
 	public float movementSprintSpeed = 10.0f;
 	public float mouseSensitivity = 2.0f;
@@ -26,7 +26,7 @@ public class FirstPersonController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		
+
 		// Rotation
 		float rotationLeftRight;
 		float rotationUpDown;
@@ -55,17 +55,33 @@ public class FirstPersonController : MonoBehaviour {
 		float forwardSpeed = Input.GetAxis("Vertical");
 		float sideSpeed = Input.GetAxis("Horizontal");
 
+		Debug.Log("Fire2 down: " + Input.GetButton("Fire2"));
+
 		if(characterController.isGrounded && Input.GetButtonDown("Jump")) {
 			movementSpeedInAir = getForwardSpeed(forwardSpeed);
 			verticalVelocity = jumpSpeed;
 		}
-
-		if(!characterController.isGrounded) {
+		else if(!characterController.isGrounded) {
 			forwardSpeed = movementSpeedInAir;
-			verticalVelocity += Physics.gravity.y * Time.deltaTime;
+
+			if (!Input.GetButton("Fire2")) {
+				verticalVelocity += Physics.gravity.y * Time.deltaTime;
+			}
 		}
 		else {
 			forwardSpeed = getForwardSpeed(forwardSpeed);
+
+			if (!Input.GetButton("Fire2")) {
+				verticalVelocity = -1f;
+			}
+		}
+
+
+		if(characterController.isGrounded) {
+			Debug.Log("Grounded" + " v:" + verticalVelocity);
+		}
+		else {
+			Debug.Log("NOT Grounded" + " v:" + verticalVelocity);
 		}
 
 		sideSpeed *= movementSpeed;
